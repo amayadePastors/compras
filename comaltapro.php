@@ -96,11 +96,11 @@ function errores ($error_level,$error_message){
 
 function obtenerIdCategoria($categoria,$db) {
 	$idCategoria = null;
-	$sql = "SELECT ID_CATEGORIA FROM categoria WHERE nombre = '$categoria'";
+	$sql = "SELECT id_categoria FROM categoria WHERE nombre = '$categoria'";
 	$resultado = mysqli_query($db, $sql);
 	if ($resultado) {
 		while ($row = mysqli_fetch_assoc($resultado)) {
-			$idCategoria = $row['ID_CATEGORIA'];
+			$idCategoria = $row['id_categoria'];
 		}
 	}
 	return $idCategoria;
@@ -109,7 +109,7 @@ function obtenerIdCategoria($categoria,$db) {
 
 function insertarProducto($idproducto,$nombre,$precio,$idCategoria,$db){
 
-	$sql = "INSERT INTO producto (ID_PRODUCTO,NOMBRE,PRECIO,ID_CATEGORIA) VALUES ('$idproducto','$nombre',$precio,'$idCategoria')";
+	$sql = "INSERT INTO producto (id_producto,nombre,precio,id_categoria) VALUES ('$idproducto','$nombre',$precio,'$idCategoria')";
 
 	if (mysqli_query($db, $sql)) {
 		echo "Producto dado de alta. <br/>";
