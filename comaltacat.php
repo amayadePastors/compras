@@ -69,7 +69,7 @@ function errores ($error_level,$error_message)
 }
 
 function insertarCategoria($idcategoria,$nombre,$db){
-	$sql = "INSERT INTO categoria (ID_CATEGORIA, NOMBRE) VALUES ('$idcategoria', '$nombre')";
+	$sql = "INSERT INTO categoria (id_categoria, nombre) VALUES ('$idcategoria', '$nombre')";
 	if (mysqli_query($db, $sql)) {
 		echo "Categoria dada de alta.";
 	} else {
