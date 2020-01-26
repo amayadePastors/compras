@@ -52,17 +52,19 @@ if (!isset($_POST) || empty($_POST)) {
 
 	// Aquí va el código al pulsar submit
 	
-    $idproducto= limpiarCampo($_POST['idproducto']);
-	$nombre= limpiarCampo($_POST['nombre']);
-	$precio= (double)limpiarCampo($_POST['precio']);
-	$categoria= $_POST['categoria'];
-	
-	$idCategoria=obtenerIdCategoria($categoria,$db);
-	
-	insertarProducto($idproducto,$nombre,$precio,$idCategoria,$db);
-	
-	mysqli_close($db);
-	
+    $idproducto= strtoupper(limpiarCampo($_POST['idproducto']));
+	$nombre= strtoupper(limpiarCampo($_POST['nombre']));
+	if(existeProducto($nombre,$db)){
+		trigger_error("Ya existe un producto con ese nombre");
+	}else{
+		$precio= (double)limpiarCampo($_POST['precio']);
+		$categoria= $_POST['categoria'];
+		
+		$idCategoria=obtenerIdCategoria($categoria,$db);
+		
+		insertarProducto($idproducto,$nombre,$precio,$idCategoria,$db);
+	}	
+	mysqli_close($db);	
 }
 ?>
 
@@ -106,6 +108,21 @@ function obtenerIdCategoria($categoria,$db) {
 	return $idCategoria;
 
 }
+
+function existeProducto($nombre,$db){
+	$existe=false;
+	$sql = "SELECT nombre FROM producto WHERE nombre = '$nombre'";
+	$resultado = mysqli_query($db, $sql);
+	if($resultado){
+		if (mysqli_num_rows($resultado)>0) 
+				$existe = true;
+	}
+	else{
+		trigger_error("Error: " . $sql . "<br/>" . mysqli_error($db));
+	}
+	return $existe;
+}
+
 
 function insertarProducto($idproducto,$nombre,$precio,$idCategoria,$db){
 

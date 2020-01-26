@@ -1,61 +1,64 @@
-CREATE DATABASE COMPRASWEB;
-USE COMPRASWEB;
+create database comprasweb;
+use comprasweb;
 
-CREATE TABLE CLIENTE
-(NIF VARCHAR(9),
- NOMBRE VARCHAR(40),
- APELLIDO VARCHAR(40),
- CP VARCHAR(5),
- DIRECCION VARCHAR(40),
- CIUDAD VARCHAR(40));
+create table cliente
+(nif varchar(9),
+ nombre varchar(40),
+ apellido varchar(40),
+ cp varchar(5),
+ direccion varchar(40),
+ ciudad varchar(40));
  
-ALTER TABLE CLIENTE ADD CONSTRAINT PK_CLIENTE PRIMARY KEY (NIF); 
+alter table cliente add constraint pk_cliente primary key (nif); 
 
-CREATE TABLE CATEGORIA
-(ID_CATEGORIA VARCHAR(5),
- NOMBRE VARCHAR(40));
+create table categoria
+(id_categoria varchar(5),
+ nombre varchar(40));
  
-ALTER TABLE CATEGORIA ADD CONSTRAINT PK_CATEGORIA PRIMARY KEY (ID_CATEGORIA); 
+alter table categoria add constraint pk_categoria primary key (id_categoria); 
 
-CREATE TABLE ALMACEN
-(NUM_ALMACEN INTEGER,
- LOCALIDAD VARCHAR(40));
+create table almacen
+(num_almacen integer,
+ localidad varchar(40));
  
-ALTER TABLE ALMACEN ADD CONSTRAINT PK_ALMACEN PRIMARY KEY (NUM_ALMACEN); 
+alter table almacen add constraint pk_almacen primary key (num_almacen); 
 
 
-CREATE TABLE PRODUCTO
-(ID_PRODUCTO VARCHAR(5),
- NOMBRE		VARCHAR(40),
- PRECIO		DOUBLE,
- ID_CATEGORIA VARCHAR(5));
+create table producto
+(id_producto varchar(5),
+ nombre		varchar(40),
+ precio		double,
+ id_categoria varchar(5));
 
-ALTER TABLE PRODUCTO ADD CONSTRAINT PK_PRODUCTO PRIMARY KEY (ID_PRODUCTO); 
+alter table producto add constraint pk_producto primary key (id_producto); 
 
-ALTER TABLE PRODUCTO ADD CONSTRAINT FK_PROD_CAT FOREIGN KEY (ID_CATEGORIA) REFERENCES CATEGORIA(ID_CATEGORIA); 
+alter table producto add constraint fk_prod_cat foreign key (id_categoria) references categoria(id_categoria); 
 
-CREATE TABLE COMPRA
-(NIF VARCHAR(9),
- ID_PRODUCTO VARCHAR(5),
- FECHA_COMPRA DATE,
- UNIDADES INTEGER);
+create table compra
+(nif varchar(9),
+ id_producto varchar(5),
+ unidades integer);
  
-ALTER TABLE COMPRA ADD CONSTRAINT PK_COMPRA PRIMARY KEY (NIF,ID_PRODUCTO,FECHA_COMPRA);  
+alter table compra add constraint pk_compra primary key (nif,id_producto,fecha_compra);  
  
-ALTER TABLE COMPRA ADD CONSTRAINT FK_COM_CLI FOREIGN KEY (NIF) REFERENCES CLIENTE(NIF);  
+alter table compra add constraint fk_com_cli foreign key (nif) references cliente(nif);  
 
-ALTER TABLE COMPRA ADD CONSTRAINT FK_COM_PRO FOREIGN KEY (ID_PRODUCTO) REFERENCES PRODUCTO(ID_PRODUCTO); 
+alter table compra add constraint fk_com_pro foreign key (id_producto) references producto(id_producto); 
 
-CREATE TABLE ALMACENA
-(NUM_ALMACEN INTEGER,
- ID_PRODUCTO VARCHAR(5),
- CANTIDAD INTEGER);
+create table almacena
+(num_almacen integer,
+ id_producto varchar(5),
+ cantidad integer);
 
-ALTER TABLE ALMACENA ADD CONSTRAINT PK_ALMACENA PRIMARY KEY (NUM_ALMACEN,ID_PRODUCTO); 
+alter table almacena add constraint pk_almacena primary key (num_almacen,id_producto); 
 
-ALTER TABLE ALMACENA ADD CONSTRAINT FK_ALM_ALM FOREIGN KEY (NUM_ALMACEN) REFERENCES ALMACEN(NUM_ALMACEN);  
+alter table almacena add constraint fk_alm_alm foreign key (num_almacen) references almacen(num_almacen);  
 
-ALTER TABLE ALMACENA ADD CONSTRAINT FK_ALM_PRO FOREIGN KEY (ID_PRODUCTO) REFERENCES PRODUCTO(ID_PRODUCTO); 
+alter table almacena add constraint fk_alm_pro foreign key (id_producto) references producto(id_producto);
+
+alter table compra ADD fecha_compra DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ; 
+
+
 
 
 
