@@ -8,7 +8,7 @@
 </head>
 
 <body>
-<h1>ALTA CATEGORÍAS - Amaya de Pastors</h1>
+<h1>ALTA ALMACENES - Amaya de Pastors</h1>
 <?php
 include "conexion.php";
 set_error_handler("errores");
@@ -17,23 +17,17 @@ set_error_handler("errores");
 /* Se muestra el formulario la primera vez */
 if (!isset($_POST) || empty($_POST)) { 
 
-	
-	
     /* Se inicializa la lista valores*/
 	echo '<form action="" method="post">';
 ?>
 <div class="container ">
 <!--Aplicacion-->
 <div class="card border-success mb-3" style="max-width: 30rem;">
-<div class="card-header">Datos Categoría</div>
+<div class="card-header">Datos Almacén</div>
 <div class="card-body">
 		<div class="form-group">
-        ID CATEGORIA <input type="text" name="idcategoria" placeholder="idcategoria" class="form-control">
+        LOCALIDAD <input type="text" name="localidad" placeholder="localidad" class="form-control">
         </div>
-		<div class="form-group">
-        NOMBRE CATEGORIA <input type="text" name="nombre" placeholder="nombre" class="form-control">
-        </div>
-
 		</BR>
 <?php
 	echo '<div><input type="submit" value="Alta Categoría"></div>
@@ -41,13 +35,11 @@ if (!isset($_POST) || empty($_POST)) {
 } else { 
 
 	// Aquí va el código al pulsar submit
-	$idcategoria= strtoupper(limpiarCampo($_POST['idcategoria']));
-	$nombre= strtoupper(limpiarCampo($_POST['nombre']));
-	if(existeCategoria($nombre,$db)){
-		trigger_error("Ya existe una categoria con ese nombre");
-	}else{
-		insertarCategoria($idcategoria,$nombre,$db);
-	}
+	$localidad= strtoupper(limpiarCampo($_POST['localidad']));
+	$numeroalmacen=calcularNumAlmacen($db);
+	
+	insertarAlmacen($numeroalmacen,$localidad,$db);
+	
 	mysqli_close($db);
 	
 }
@@ -69,24 +61,32 @@ function errores ($error_level,$error_message)
   echo "Codigo error: </b> $error_level  - <b> Mensaje: $error_message </b><br>";
   die();  
 }
-function existeCategoria($nombre,$db){
-	$existe=false;
-	$sql = "SELECT nombre FROM categoria WHERE nombre = '$nombre'";
-	$resultado = mysqli_query($db, $sql);
-	if($resultado){
-		if (mysqli_num_rows($resultado)>0) 
-				$existe = true;
-	}
-	else{
+
+function calcularNumAlmacen($db){
+	$numeroalmacen = null;
+	$sql = "SELECT max(num_almacen) as MAXIMO FROM almacen";
+	$max = mysqli_query($db, $sql);
+	if ($max) {
+		if (mysqli_num_rows($max) == null) {
+			$numeroalmacen=10;
+		}else if (mysqli_num_rows($max) == 1) {
+			$row =mysqli_fetch_assoc($max);
+			$numeroalmacen=$row["MAXIMO"]+10;
+		} else {
+			trigger_error("Error: " . $sql . "<br/>" . mysqli_error($db));
+			
+		}
+		return $numeroalmacen;
+		
+	} else {
 		trigger_error("Error: " . $sql . "<br/>" . mysqli_error($db));
 	}
-	return $existe;
 }
 
-function insertarCategoria($idcategoria,$nombre,$db){
-	$sql = "INSERT INTO categoria (id_categoria, nombre) VALUES ('$idcategoria', '$nombre')";
+function insertarAlmacen($numeroalmacen,$localidad,$db){
+	$sql = "INSERT INTO almacen (num_almacen, localidad) VALUES ('$numeroalmacen', '$localidad')";
 	if (mysqli_query($db, $sql)) {
-		echo "Categoria dada de alta.";
+		echo "Almacen dado de alta.";
 	} else {
 		trigger_error("Error: " . $sql . "<br/>" . mysqli_error($db));
 	}
