@@ -117,15 +117,23 @@ function obtenerCodigoProducto($producto,$db){
 }
 
 function aprovisionarProducto($almacen,$codigoProducto,$cantidad,$db){
-
-	$sql = "INSERT INTO almacena (num_almacen,id_producto,cantidad) VALUES ('$almacen','$codigoProducto','$cantidad')";
-
-	if (mysqli_query($db, $sql)) {
-		echo "Producto aprovisionado. <br/>";
-	} else {
-		trigger_error("Error: " . $sql . "<br/>" . mysqli_error($db));
-	}
-
+	
+	$sql1 = "select * from almacena where num_almacen='$almacen' and id_producto='$codigoProducto'";
+	$sql2;
+	$resultado = mysqli_query($db, $sql1);
+	if ($resultado) {
+		if (mysqli_num_rows($resultado) > 0)
+			$sql2 = "update almacena set cantidad=cantidad+'$cantidad' where num_almacen='$almacen' and id_producto='$codigoProducto'";	
+		else
+			$sql2 = "INSERT INTO almacena (num_almacen,id_producto,cantidad) VALUES ('$almacen','$codigoProducto','$cantidad')";
+		
+		if (mysqli_query($db, $sql2)) 
+			echo "Producto aprovisionado. <br/>";
+		else 
+			trigger_error("Error: " . $sql2 . "<br/>" . mysqli_error($db));	
+		
+	}else
+		trigger_error("Error: " . $sql1 . "<br/>" . mysqli_error($db));	
 }
 	
 

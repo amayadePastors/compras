@@ -47,8 +47,12 @@ if (!isset($_POST) || empty($_POST)) {
 	// Aquí va el código al pulsar submit	
 	$nif=$_POST['nif'];	
 	$fechaini=$_POST['fechaini'];	
-	$fechafin=$_POST['fechafin'];	
-	mostrarCompras($nif,$fechaini,$fechafin,$db);
+	$fechafin=$_POST['fechafin'];
+	if($fechaini>$fechafin)
+		trigger_error("La feha de fin no puede ser inferior a la de inicio");
+	else
+		mostrarCompras($nif,$fechaini,$fechafin,$db);
+	
 	mysqli_close($db);
 }
 ?>
