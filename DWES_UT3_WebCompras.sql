@@ -56,7 +56,14 @@ alter table almacena add constraint fk_alm_alm foreign key (num_almacen) referen
 
 alter table almacena add constraint fk_alm_pro foreign key (id_producto) references producto(id_producto);
 
-alter table compra ADD fecha_compra DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ; 
+alter table compra ADD fecha_compra DATETIME NOT NULL; 
+
+
+alter table cliente add password varchar(40) NOT NULL;
+
+
+SOLO EN CASO NECESARIO
+drop table compra;
 
 
 
